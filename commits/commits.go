@@ -28,7 +28,7 @@ type CommitWrapper struct {
 
 // HandleCommits for "/commits"
 func HandleCommits(res http.ResponseWriter, req *http.Request) {
-	comRes, err := http.Get("https://api.github.com/repos/Andrew1407/test_repo/commits")
+	comRes, err := http.Get("https://api.github.com/repos/G-V-G/l1/commits")
 	if (err != nil) {
 		http.NotFound(res, req)
 		return
