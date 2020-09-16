@@ -6,24 +6,21 @@ import (
 	"io/ioutil"
 )
 
-// Person comitter
-type Person struct {
+type person struct {
 	Name string `json:"name"`
 	Email string `json:"email"`
 	Date string `json:"date"`
 }
 
-// Commit in repo story
-type Commit struct {
-	Author Person `json:"author"`
-	Committer Person `json:"committer"`
+type commit struct {
+	Author person `json:"author"`
+	Committer person `json:"committer"`
 	Msg string `json:"message"`
 }
 
-// CommitWrapper from pasring
-type CommitWrapper struct {
+type commitWrapper struct {
 	Branch string `json:"sha"`
-	Commit Commit `json:"commit"`
+	Commit commit `json:"commit"`
 }
 
 // HandleCommits for "/commits"
@@ -40,17 +37,14 @@ func HandleCommits(res http.ResponseWriter, req *http.Request) {
 		res.Write([]byte("{}"))
 		return
 	}
-	var commits []CommitWrapper
-	err = json.Unmarshal(body, &commits)
-	if (err != nil) {
+	var commits []commitWrapper
+	if err := json.Unmarshal(body, &commits); err != nil {
 		res.Write([]byte("{}"))
 		return
 	}
-	commitsJSON, err := json.MarshalIndent(&commits, "", " ")
-	res.Header().Set("Content-Type", "application/json")
-	if (err != nil) {
+	if commitsJSON, err := json.MarshalIndent(&commits, "", " "); err != nil {
 		res.Write([]byte("{}"))
-		return
+	} else {
+		res.Write(commitsJSON)
 	}
-	res.Write(commitsJSON)
 }

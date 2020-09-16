@@ -6,21 +6,18 @@ import (
 	"encoding/json"
 )
 
-// Timestamp response
-type Timestamp struct {
+type timestamp struct {
 	Time string `json:"time"`
 }
 
 // HandleTime for "/time"
 func HandleTime (res http.ResponseWriter, req *http.Request) {
-	currentTime := time.Now()
-	timeFormated := currentTime.Format(time.RFC3339)
-	timestampRes := Timestamp{timeFormated}
-	timeJSON, err := json.MarshalIndent(timestampRes, "", " ")
+	currentTime := time.Now().Format(time.RFC3339)
+	timestampRes := timestamp{currentTime}
 	res.Header().Set("Content-Type", "application/json")
-	if (err != nil) {
+	if timeJSON, err := json.MarshalIndent(&timestampRes, "", " "); err != nil {
 		res.Write([]byte("{}"))
-		return
+	} else {
+		res.Write(timeJSON)
 	}
-	res.Write(timeJSON)
 }
